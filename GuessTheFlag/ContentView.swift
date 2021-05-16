@@ -8,24 +8,18 @@
 import SwiftUI
 
 struct ContentView: View {
+    @State private var showingAlert = false
+    
     var body: some View {
-        VStack {
-            HStack {
-                Text("Hello, world!")
-                Text("This is inside a stack")
-                Text("third")
-            }
-            HStack {
-                Text("Hello, world!")
-                Text("This is inside a stack")
-                Text("third")
-            }
-            HStack {
-                Text("Hello, world!")
-                Text("This is inside a stack")
-                Text("third")
-            }
+        
+        Button("Show alert") {
+            self.showingAlert = true
         }
+        .alert(isPresented: $showingAlert) {
+            Alert(title: Text("Hello SwiftUI"), message: Text(""), dismissButton: .default(Text("OK")))
+        }
+//        Alert(title: Text("Hello SwiftUI"), message: Text("This is some detail message"), dismissButton: .default(Text("OK")))
+         
     }
 }
 
