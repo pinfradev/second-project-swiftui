@@ -13,12 +13,15 @@ struct ContentView: View {
     
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0 ... 2)
+    @State private var userScore: Int?
     
     func flagTapped(_ number: Int) {
         if number == correctAnswer {
+            userScore = 100
             scoreTitle = "Correct"
         } else {
-            scoreTitle = "Wrong"
+            userScore = 0
+            scoreTitle = "Wrong that is the flag of \(countries[number])"
         }
         showingScore = true
     }
@@ -26,6 +29,17 @@ struct ContentView: View {
     func askQuestion() {
         countries.shuffle()
         correctAnswer = Int.random(in: 0 ... 2)
+        userScore = nil
+    }
+    
+    private func getText() -> String {
+        var textToShow = ""
+        if let text = userScore {
+            textToShow = "\(text)"
+        } else {
+            textToShow = countries[correctAnswer]
+        }
+        return textToShow
     }
     
     var body: some View {
@@ -36,7 +50,8 @@ struct ContentView: View {
                 VStack {
                     Text("Tap the flag of")
                         .foregroundColor(.white)
-                    Text(countries[correctAnswer])
+                    
+                    Text(getText())
                         .foregroundColor(.white)
                         .font(.largeTitle)
                         .fontWeight(.black)
@@ -59,7 +74,7 @@ struct ContentView: View {
             }
         }
         .alert(isPresented: $showingScore) {
-            Alert(title: Text(scoreTitle), message: Text("your score is ???"), dismissButton: .default(Text("Continue")) {
+            Alert(title: Text(scoreTitle), message: Text("your score is \(userScore ?? 0)"), dismissButton: .default(Text("Continue")) {
                 askQuestion()
             })
         }
