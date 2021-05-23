@@ -8,18 +8,61 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var showingAlert = false
+    @State private var showingScore = false
+    @State private var scoreTitle = ""
+    
+    @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Russia", "Spain", "UK", "US"].shuffled()
+    @State private var correctAnswer = Int.random(in: 0 ... 2)
+    
+    func flagTapped(_ number: Int) {
+        if number == correctAnswer {
+            scoreTitle = "Correct"
+        } else {
+            scoreTitle = "Wrong"
+        }
+        showingScore = true
+    }
+    
+    func askQuestion() {
+        countries.shuffle()
+        correctAnswer = Int.random(in: 0 ... 2)
+    }
     
     var body: some View {
-        
-        Button("Show alert") {
-            self.showingAlert = true
+        ZStack {
+            LinearGradient(gradient: Gradient(colors: [Color.blue, Color.black]), startPoint: .top, endPoint: .bottom)
+                .ignoresSafeArea()
+            VStack {
+                VStack {
+                    Text("Tap the flag of")
+                        .foregroundColor(.white)
+                    Text(countries[correctAnswer])
+                        .foregroundColor(.white)
+                        .font(.largeTitle)
+                        .fontWeight(.black)
+                }
+                
+                ForEach(0 ..< 3) { number in
+                    Button(action: {
+                        flagTapped(number)
+                    }) {
+                        Image(self.countries[number])
+                            .renderingMode(.original)
+                            .clipShape(Capsule())
+                            .overlay(Capsule().stroke(Color.black, lineWidth: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/))
+                            .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/, radius: 2)
+                    }
+                    
+                }
+                
+                Spacer()
+            }
         }
-        .alert(isPresented: $showingAlert) {
-            Alert(title: Text("Hello SwiftUI"), message: Text(""), dismissButton: .default(Text("OK")))
+        .alert(isPresented: $showingScore) {
+            Alert(title: Text(scoreTitle), message: Text("your score is ???"), dismissButton: .default(Text("Continue")) {
+                askQuestion()
+            })
         }
-//        Alert(title: Text("Hello SwiftUI"), message: Text("This is some detail message"), dismissButton: .default(Text("OK")))
-         
     }
 }
 
