@@ -7,6 +7,17 @@
 
 import SwiftUI
 
+struct FlagImage: View {
+    var country: String
+    
+    var body: some View {
+        Image(country)
+            .renderingMode(.original)
+            .clipShape(Capsule())
+            .overlay(Capsule().stroke(Color.black, lineWidth: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/))
+            .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/, radius: 2)
+    }
+}
 struct ContentView: View {
     @State private var showingScore = false
     @State private var scoreTitle = ""
@@ -61,22 +72,18 @@ struct ContentView: View {
                     Button(action: {
                         flagTapped(number)
                     }) {
-                        Image(self.countries[number])
-                            .renderingMode(.original)
-                            .clipShape(Capsule())
-                            .overlay(Capsule().stroke(Color.black, lineWidth: /*@START_MENU_TOKEN@*/1.0/*@END_MENU_TOKEN@*/))
-                            .shadow(color: /*@START_MENU_TOKEN@*/.black/*@END_MENU_TOKEN@*/, radius: 2)
+                        FlagImage(country: self.countries[number])
+                        
                     }
                     
+                    Spacer()
                 }
-                
-                Spacer()
             }
-        }
-        .alert(isPresented: $showingScore) {
-            Alert(title: Text(scoreTitle), message: Text("your score is \(userScore ?? 0)"), dismissButton: .default(Text("Continue")) {
-                askQuestion()
-            })
+            .alert(isPresented: $showingScore) {
+                Alert(title: Text(scoreTitle), message: Text("your score is \(userScore ?? 0)"), dismissButton: .default(Text("Continue")) {
+                    askQuestion()
+                })
+            }
         }
     }
 }
